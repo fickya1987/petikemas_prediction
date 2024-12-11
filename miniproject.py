@@ -232,6 +232,11 @@ elif menu == "Prediction":
                             'Upper Bound': conf_int.iloc[:, 1].values
                         })
 
+                        # Terapkan batasan pada nilai prediksi
+                        forecast_df['Predicted Value'] = forecast_df['Predicted Value'].apply(lambda x: max(x, 0))
+                        forecast_df['Lower Bound'] = forecast_df['Lower Bound'].apply(lambda x: max(x, 0))
+                        forecast_df['Upper Bound'] = forecast_df['Upper Bound'].apply(lambda x: max(x, 0))
+
                         st.subheader("Hasil Prediksi")
                         st.write(forecast_df)
 
@@ -246,6 +251,7 @@ elif menu == "Prediction":
                             st.write(ai_analysis)
                     except Exception as e:
                         st.error(f"Terjadi kesalahan dalam proses prediksi: {e}")
+
 
 # Preprocessing
 elif menu == "Preprocessing":
