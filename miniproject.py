@@ -39,9 +39,12 @@ st.image("pelindo_logo.jfif", use_column_width=True)  # Replace with the actual 
 st.title("Analytical Dashboard Petikemas Pelindo")
 st.markdown("---")
 
+
 # Sidebar
 st.sidebar.title("Menu")
 menu = st.sidebar.selectbox("Pilih Menu", ["Dashboard", "Analisis Terminal", "Visualisasi Berdasarkan Kategori", "Prediction", "Preprocessing"])
+
+
 
 # Fungsi untuk membaca data dari file
 def load_data(file):
