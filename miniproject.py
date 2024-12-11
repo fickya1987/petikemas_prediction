@@ -45,7 +45,6 @@ st.sidebar.title("Menu")
 menu = st.sidebar.selectbox("Pilih Menu", ["Dashboard", "Analisis Terminal", "Visualisasi Berdasarkan Kategori", "Prediction", "Preprocessing"])
 
 
-
 # Fungsi untuk membaca data dari file
 def load_data(file):
     if file.name.endswith('.csv'):
@@ -59,13 +58,44 @@ def load_data(file):
 # Fungsi untuk preprocessing data
 def preprocess_data(data):
     try:
+        # Debug awal: Menampilkan data asli
+        st.write("Data awal yang diterima:")
+        st.write(data.head())
+
+        # Pastikan kolom 'Date' ada
+        if 'Date' not in data.columns:
+            raise ValueError("Kolom 'Date' tidak ditemukan pada data.")
+
+        # Debug sebelum konversi
+        st.write("Sebelum konversi 'Date':")
+        st.write(data['Date'].head())
+
+        # Konversi kolom 'Date' ke format datetime
         data['Date'] = pd.to_datetime(data['Date'], format='%d/%m/%Y %H:%M', errors='coerce')
+
+        # Debug setelah konversi
+        st.write("Setelah konversi 'Date':")
+        st.write(data.head())
+
+        # Hapus baris dengan tanggal tidak valid
         data = data.dropna(subset=['Date'])
+
+        # Debug setelah drop NA
+        st.write("Setelah menghapus baris dengan 'Date' tidak valid:")
+        st.write(data.head())
+
+        # Isi nilai NaN di kolom lain dengan 0
         data.fillna(0, inplace=True)
+
+        # Debug setelah pengisian NaN
+        st.write("Setelah mengisi nilai kosong dengan 0:")
+        st.write(data.head())
+
         return data
     except Exception as e:
         st.error(f"Kesalahan saat preprocessing data: {e}")
         return None
+
 
 # Fungsi untuk analisis AI menggunakan GPT-4
 def generate_ai_analysis(data, context):
@@ -217,51 +247,7 @@ elif menu == "Prediction":
                     except Exception as e:
                         st.error(f"Terjadi kesalahan dalam proses prediksi: {e}")
 
-
-
-def preprocess_data(data):
-    try:
-        # Debug awal: Menampilkan data asli
-        st.write("Data awal yang diterima:")
-        st.write(data.head())
-
-        # Pastikan kolom 'Date' ada
-        if 'Date' not in data.columns:
-            raise ValueError("Kolom 'Date' tidak ditemukan pada data.")
-
-        # Debug sebelum konversi
-        st.write("Sebelum konversi 'Date':")
-        st.write(data['Date'].head())
-
-        # Konversi kolom 'Date' ke format datetime
-        data['Date'] = pd.to_datetime(data['Date'], format='%d/%m/%Y %H:%M', errors='coerce')
-
-        # Debug setelah konversi
-        st.write("Setelah konversi 'Date':")
-        st.write(data.head())
-
-        # Hapus baris dengan tanggal tidak valid
-        data = data.dropna(subset=['Date'])
-
-        # Debug setelah drop NA
-        st.write("Setelah menghapus baris dengan 'Date' tidak valid:")
-        st.write(data.head())
-
-        # Isi nilai NaN di kolom lain dengan 0
-        data.fillna(0, inplace=True)
-
-        # Debug setelah pengisian NaN
-        st.write("Setelah mengisi nilai kosong dengan 0:")
-        st.write(data.head())
-
-        return data
-    except Exception as e:
-        st.error(f"Kesalahan saat preprocessing data: {e}")
-        return None
-
-
 # Preprocessing
-
 elif menu == "Preprocessing":
     st.title("Preprocessing Data Petikemas")
     uploaded_file = st.file_uploader("Unggah File Data (.csv atau .xlsx)", type=["csv", "xlsx"])
