@@ -35,7 +35,7 @@ warnings.filterwarnings('ignore')
 st.set_page_config(page_title="Analytical Dashboard Petikemas Pelindo", layout="wide")
 
 # Header with logo and title
-st.image("pelindo_logo.jfif", use_column_width=True)  # Replace with the actual path to the Pelindo logo
+st.image("pelindo_logo.png", use_column_width=True)  # Replace with the actual path to the Pelindo logo
 st.title("Analytical Dashboard Petikemas Pelindo")
 st.markdown("---")
 
@@ -191,4 +191,25 @@ elif menu == "Prediction":
                         forecast = future.predicted_mean
                         conf_int = future.conf_int()
 
-                        forecast_dates = pd.date_range(start=data_grouped['Date'].iloc[-1], periods=forecast_period + 
+                        forecast_dates = pd.date_range(start=data_grouped['Date'].iloc[-1], periods=forecast_period + 1, freq='M')[1:]
+                        forecast_df = pd.DataFrame({
+                            'Date': forecast_dates,
+                            'Predicted Value': forecast.values,
+                            'Lower Bound': conf_int.iloc[:, 0].values,
+                            'Upper Bound': conf_int.iloc[:, 1].values
+                        })
+
+                        st.subheader("Hasil Prediksi")
+                        st.write(forecast_df)
+
+                        fig = px.line(forecast_df, x='Date', y='Predicted Value', title="Prediksi Data Petikemas")
+                        fig.add_scatter(x=forecast_df['Date'], y=forecast_df['Lower Bound'], mode='lines', name='Lower Bound', line=dict(dash='dot'))
+                        fig.add_scatter(x=forecast_df['Date'], y=forecast_df['Upper Bound'], mode='lines', name='Upper Bound', line=dict(dash='dot'))
+                        st.plotly_chart(fig, use_container_width=True)
+
+                        if st.button("Generate AI Analysis - Prediction"):
+                            ai_analysis = generate_ai_analysis(forecast_df, "Prediksi Data Petikemas")
+                            st.subheader("Hasil Analisis AI:")
+                            st.write(ai_analysis)
+                    except Exception as e:
+                        st.error(f"Terjadi kesalahan dalam proses prediksi: {e}")
