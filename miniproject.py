@@ -106,10 +106,10 @@ def generate_ai_analysis(data, context):
             {"role": "user", "content": f"Berikan analisis naratif berdasarkan data berikut:\n\n{data_summary}\n\nKonsep: {context}. Tuliskan analisis dengan narasi yang jelas dan terstruktur."}
         ]
         response = openai.ChatCompletion.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=messages,
             max_tokens=2048,
-            temperature=0.7
+            temperature=1.0
         )
         return response['choices'][0]['message']['content'].strip()
     except Exception as e:
@@ -137,7 +137,7 @@ if menu == "Dashboard":
                     st.write(f"Data yang Difilter (Satuan: {selected_satuan}):")
                     st.write(data_filtered)
 
-                    if st.button("Generate AI Analysis - Dashboard"):
+                    if st.button("Generate Pelindo AI"):
                         ai_analysis = generate_ai_analysis(data_filtered, "Dashboard - Analisis Data Petikemas")
                         st.subheader("Hasil Analisis AI:")
                         st.write(ai_analysis)
@@ -166,7 +166,7 @@ elif menu == "Analisis Terminal":
 
                     if st.button("Generate AI Analysis - Terminal"):
                         ai_analysis = generate_ai_analysis(terminal_data, "Analisis Terminal Petikemas")
-                        st.subheader("Hasil Analisis AI:")
+                        st.subheader("Hasil Analisis Pelindo AI:")
                         st.write(ai_analysis)
 
 # Visualisasi Berdasarkan Kategori
@@ -191,7 +191,7 @@ elif menu == "Visualisasi Berdasarkan Kategori":
 
                 if st.button(f"Generate AI Analysis - {selected_kategori}"):
                     ai_analysis = generate_ai_analysis(category_data, f"Visualisasi Berdasarkan {selected_kategori}")
-                    st.subheader("Hasil Analisis AI:")
+                    st.subheader("Hasil Analisis Pelindo AI:")
                     st.write(ai_analysis)
 
 # Prediction
@@ -245,9 +245,9 @@ elif menu == "Prediction":
                         fig.add_scatter(x=forecast_df['Date'], y=forecast_df['Upper Bound'], mode='lines', name='Upper Bound', line=dict(dash='dot'))
                         st.plotly_chart(fig, use_container_width=True)
 
-                        if st.button("Generate AI Analysis - Prediction"):
+                        if st.button("Generate AI Pelindo - Prediksi"):
                             ai_analysis = generate_ai_analysis(forecast_df, "Prediksi Data Petikemas")
-                            st.subheader("Hasil Analisis AI:")
+                            st.subheader("Hasil Analisis Pelindo AI:")
                             st.write(ai_analysis)
                     except Exception as e:
                         st.error(f"Terjadi kesalahan dalam proses prediksi: {e}")
